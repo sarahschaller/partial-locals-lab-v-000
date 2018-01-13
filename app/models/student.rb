@@ -14,14 +14,12 @@ class Student < ActiveRecord::Base
   has_many :classroom_students
   has_many :classrooms, through: :classroom_students
 
-  def self.search(search_name)
-    @found_students = []
-    Student.all.each do |student|
-      if student.name.downcase.include?(search_name.downcase)
-        @found_students << student
-      end
+  def self.search(search_student)
+    if search_student.present?
+      where("name LIKE ?", "%#{search_student}")
+    else search_student.empty?
+      self.all
     end
-    @found_students
   end
 
 end
